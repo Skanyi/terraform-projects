@@ -4,7 +4,7 @@
 
 Clone the repository:
 
-    `git clone https://github.com/Skanyi/terraform-projects.git`
+    git clone https://github.com/Skanyi/terraform-projects.git
 
 Change directory;
 
@@ -43,13 +43,13 @@ Before we proceed and provision EKS Cluster using Terraform, there are a few com
 
     5. helm - v3.8.0
     ```
-    
+
 
 ### Architecture
 
 The following diagram shows the core resources that we will be creating in AWS. 
 
-    ![Simple Architecture](/assets/EKS-With-Terraform.png)
+    ![Simple Architecture](assets/EKS-With-Terraform.png "Setting up EKS with Terraform, Helm and a Load balancer")
 
 A VPC will be created with three Public Subnets and three Private Subnets in three different Availability Zones. Traffic from Private Subnets will route through the NAT Gateway and traffic from Public Subnets will route through the Internet Gateway. 
 
@@ -158,7 +158,7 @@ Kubernetes Cluster Nodes will be created as part of Auto-Scaling groups and will
 
 Before we can install the Application load banacer controller, we need to create a role, policy and service account that the controller Will use. 
 
-    1. We create a role using the module [iam-role-for-service-accounts-eks](https://github.com/terraform-aws-modules/terraform-aws-iam/tree/master/examples/iam-role-for-service-accounts-eks) which will create the required policy when attach_load_balancer_controller_policy is set to true. 
+1. We create a role using the module [iam-role-for-service-accounts-eks](https://github.com/terraform-aws-modules/terraform-aws-iam/tree/master/examples/iam-role-for-service-accounts-eks) which will create the required policy when attach_load_balancer_controller_policy is set to true. 
 
         ```
         module "lb_role" {
@@ -176,7 +176,7 @@ Before we can install the Application load banacer controller, we need to create
         }
         ```
 
-    2. We create a service account that is annotated with the role created in the above step. 
+2. We create a service account that is annotated with the role created in the above step. 
 
         ```
         resource "kubernetes_service_account" "service-account" {
@@ -194,7 +194,7 @@ Before we can install the Application load banacer controller, we need to create
         }
         }
         ```
-    3. Finally we install the AWS load balancer controller. 
+3. Finally we install the AWS load balancer controller. 
    
     ```
     resource "helm_release" "alb-controller" {
@@ -242,8 +242,7 @@ Before we can install the Application load banacer controller, we need to create
 
 When the above setup is done, we are now ready to deploy a sample application to test if everything is working as expected. In this step, we are going to create the following:
 
-    1. Deployment.
-        We create a simple deplyment using resource "kubernetes_deployment_v1" and nginx as the image for our container. 
+1. Deployment - We create a simple deplyment using resource "kubernetes_deployment_v1" and nginx as the image for our container. 
 
         ```
         resource "kubernetes_deployment_v1" "sample_application_deployment" {
@@ -308,8 +307,7 @@ When the above setup is done, we are now ready to deploy a sample application to
         }
         ```
 
-    2. Serivice
-        We create a simple service that exposes the above deployment. 
+2. Serivice - We create a simple service that exposes the above deployment. 
 
         ```
         resource "kubernetes_service_v1" "sample_application_svc" {
@@ -332,8 +330,7 @@ When the above setup is done, we are now ready to deploy a sample application to
         }
         ```
 
-    3. Ingress
-        Finally we create an ingress that will be used to create the application load balancer 
+3. Ingress - Finally we create an ingress that will be used to create the application load balancer 
 
         ```
         resource "kubernetes_ingress_v1" "sample_application_ingress" {
