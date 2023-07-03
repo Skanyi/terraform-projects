@@ -1,5 +1,19 @@
 # Setting up EKS with Terraform, Helm and a Load balancer
 
+### Prerequisite
+
+Before we proceed and provision EKS Cluster using Terraform, there are a few commands or tools you need to have in the server where you will be creating the cluster from.
+
+    1. awscli - aws-cli/2.12.1 Python/3.11.3
+
+    2. go version go1.18.9 linux/amd64
+
+    3. Terraform v1.5.0
+
+    4. kubectl - Client Version: v1.23.17-eks
+
+    5. helm - v3.8.0
+
 ### Assumptions
 
 The following details makes the following assumptions.
@@ -49,19 +63,6 @@ When you ready, run the apply command to create the resources.
 ## Detailed Setup Steps. 
 
 Creating EKS cluster falls under DevOps Engineer role and sometime it can be very common to create a cluster several times. In this article, I will share how I create EKS cluster using Terraform and Install ALB controller in the cluster. We will also create a sample application that will be exposed  using Application load balancer created with Ingress. 
-
-Before we proceed and provision EKS Cluster using Terraform, there are a few commands or tools you need to have in the server where you will be creating the cluster from.
-
-    1. awscli - aws-cli/2.12.1 Python/3.11.3
-
-    2. go version go1.18.9 linux/amd64
-
-    3. Terraform v1.5.0
-
-    4. kubectl - Client Version: v1.23.17-eks
-
-    5. helm - v3.8.0
-
 
 ## Architecture
 
