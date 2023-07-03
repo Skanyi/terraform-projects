@@ -32,6 +32,7 @@ Creating EKS cluster falls under DevOps Engineer role and sometime it can be ver
 
 Before we proceed and provision EKS Cluster using Terraform, there are a few commands or tools you need to have in the server where you will be creating the cluster from.
 
+    ```
     1. awscli - aws-cli/2.12.1 Python/3.11.3
 
     2. go version go1.18.9 linux/amd64
@@ -41,13 +42,14 @@ Before we proceed and provision EKS Cluster using Terraform, there are a few com
     4. kubectl - Client Version: v1.23.17-eks-a59e1f0
 
     5. helm - v3.8.0
-
+    ```
+    
 
 ### Architecture
 
 The following diagram shows the core resources that we will be creating in AWS. 
 
-    <!-- Add the image here -->
+    ![Simple Architecture](/assets/EKS-With-Terraform.png)
 
 A VPC will be created with three Public Subnets and three Private Subnets in three different Availability Zones. Traffic from Private Subnets will route through the NAT Gateway and traffic from Public Subnets will route through the Internet Gateway. 
 
@@ -56,7 +58,7 @@ Kubernetes Cluster Nodes will be created as part of Auto-Scaling groups and will
 
 ### Setting up EKS
 
-1. Create a VPC where to deploy the cluster. For this I used the VPC module [https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/latest]. 
+1. Create a VPC where to deploy the cluster. For this I used the [VPC module](https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/latest). 
 
     ```
     module "vpc" {
@@ -93,7 +95,7 @@ Kubernetes Cluster Nodes will be created as part of Auto-Scaling groups and will
     }
     ```
 
-2. Create the EKS cluster using the EKS terraform module [https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/latest]
+2. Create the EKS cluster using the [EKS terraform module](https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/latest)
 
     ```
     module "eks" {
@@ -156,7 +158,7 @@ Kubernetes Cluster Nodes will be created as part of Auto-Scaling groups and will
 
 Before we can install the Application load banacer controller, we need to create a role, policy and service account that the controller Will use. 
 
-    1. We create a role using the module iam-role-for-service-accounts-eks which will create the required policy when attach_load_balancer_controller_policy is set to true. [https://github.com/terraform-aws-modules/terraform-aws-iam/tree/master/examples/iam-role-for-service-accounts-eks]
+    1. We create a role using the module [iam-role-for-service-accounts-eks](https://github.com/terraform-aws-modules/terraform-aws-iam/tree/master/examples/iam-role-for-service-accounts-eks) which will create the required policy when attach_load_balancer_controller_policy is set to true. 
 
         ```
         module "lb_role" {
@@ -381,7 +383,7 @@ When the above setup is done, we are now ready to deploy a sample application to
 
 When the above is done, use the following commands to confirm if the ingress was created succesfully.
 
-    kubectl get ingress -n default
+    `kubectl get ingress -n default`
 
 Access the application on the browser using the application load balancer address shown from by the above command. 
 
@@ -390,9 +392,9 @@ Access the application on the browser using the application load balancer addres
 
 When we are done testing the setup and don't require the resources created anymore, we can use the steps below to remove them. 
 
-    1. terraform init
+    1. `terraform init`
 
-    2.  terraform destroy
+    2. `terraform destroy`
 
 
 ### Conclusion of Terraform Kubernetes Deployment
@@ -404,8 +406,8 @@ The above method is just one of the method that can be used to create the EKS cl
 
 Throughout the following setup, I referenced heavily from the following sources. 
 
-[1] AWS VPC Terraform module - https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/latest
-[2] AWS EKS Terraform module - https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/latest
-[3] IAM Role for Service Accounts in EKS - https://github.com/terraform-aws-modules/terraform-aws-iam/tree/master/examples/iam-role-for-service-accounts-eks
+[1] AWS VPC Terraform module - https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/latest<br>
+[2] AWS EKS Terraform module - https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/latest<br>
+[3] IAM Role for Service Accounts in EKS - https://github.com/terraform-aws-modules/terraform-aws-iam/tree/master/examples/iam-role-for-service-accounts-eks<br>
 [4] Resource: helm_release - https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release
 
