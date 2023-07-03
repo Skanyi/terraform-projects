@@ -1,5 +1,13 @@
 # Setting up EKS with Terraform, Helm and a Load balancer
 
+### Assumptions
+
+The following details makes the following assumptions.
+
+    You have aws cli configured
+
+    You have created s3 bucket that will act as the backend of the project. 
+
 ## Quick Setup
 
 Clone the repository:
@@ -8,7 +16,19 @@ Clone the repository:
 
 Change directory;
 
-    cd terraform-projects
+    cd terraform-projects/eks
+
+Update the `backend.tf` and update the s3 bucket and the region of your s3 bucket. Update the profile if you are not using the default profile. 
+
+Update the `variables.tf` profile variable if you are not using the default profile. 
+
+If the is a role you want to add to be able to access the EKS cluster created, create the following environment variable. 
+
+    TF_VAR_rolearn
+
+If there is no role to add, disable adding role to the configmap by commenting out the following field in `modules/eks-cluster/main.tf`
+
+    manage_aws_auth_configmap = true
 
 Initialize the project to pull all the moduels used
 
@@ -38,7 +58,7 @@ Before we proceed and provision EKS Cluster using Terraform, there are a few com
 
     3. Terraform v1.5.0
 
-    4. kubectl - Client Version: v1.23.17-eks-a59e1f0
+    4. kubectl - Client Version: v1.23.17-eks
 
     5. helm - v3.8.0
 
@@ -391,6 +411,12 @@ When we are done testing the setup and don't require the resources created anymo
     1.1 terraform init
 
     1.2 terraform destroy
+
+If you get errors deleting the resources, remove the .terraform folder and destroy again.
+
+    2.1 rm -rf .terraform
+
+    2.2 terraform destroy
 
 
 ## Conclusion of Terraform Kubernetes Deployment

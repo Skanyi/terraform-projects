@@ -5,7 +5,7 @@
 
 variable "profile" {
   type    = string
-  default = "default"
+  default = "kanyi-po"
 }
 
 variable "main-region" {
@@ -24,7 +24,7 @@ variable "cluster_name" {
 }
 
 variable "rolearn" {
-	description = "Add admin role to the aws-auth configmap"
+  description = "Add admin role to the aws-auth configmap"
 }
 
 ################################################################################
