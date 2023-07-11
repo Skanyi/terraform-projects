@@ -258,153 +258,6 @@ Before we can install the Application load banacer controller, we need to create
     }
     ```
 
-## Deploy sample application. 
-
-When the above setup is done, we are now ready to deploy a sample application to test if everything is working as expected. In this step, we are going to create the following:
-
-1. Deployment - We create a simple deplyment using resource "kubernetes_deployment_v1" and nginx as the image for our container. 
-
-    ```
-    resource "kubernetes_deployment_v1" "sample_application_deployment" {
-    metadata {
-        name = "sample-application-deployment"
-        namespace = kubernetes_namespace.sample-application-namespace.metadata[0].name
-        labels = {
-        app = "nginx"
-        }
-    }
-
-    spec {
-        replicas = 2
-
-        selector {
-        match_labels = {
-            app = "nginx"
-        }
-        }
-
-        template {
-        metadata {
-            labels = {
-            app = "nginx"
-            }
-        }
-
-        spec {
-            container {
-            image = "nginx:1.21.6"
-            name  = "nginx"
-
-            resources {
-                limits = {
-                cpu    = "0.5"
-                memory = "512Mi"
-                }
-                requests = {
-                cpu    = "250m"
-                memory = "50Mi"
-                }
-            }
-
-            liveness_probe {
-                http_get {
-                path = "/"
-                port = 80
-
-                http_header {
-                    name  = "X-Custom-Header"
-                    value = "Awesome"
-                }
-                }
-
-                initial_delay_seconds = 3
-                period_seconds        = 3
-            }
-            }
-        }
-        }
-    }
-    }
-    ```
-
-2. Serivice - We create a simple service that exposes the above deployment. 
-
-    ```
-    resource "kubernetes_service_v1" "sample_application_svc" {
-    metadata {
-        name = "sample-application-svc"
-        namespace = kubernetes_namespace.sample-application-namespace.metadata[0].name
-    }
-    spec {
-        selector = {
-        app = "nginx"
-        }
-        session_affinity = "ClientIP"
-        port {
-        port        = 80
-        target_port = 80
-        }
-
-        type = "NodePort"
-    }
-    }
-    ```
-
-3. Ingress - Finally we create an ingress that will be used to create the application load balancer 
-
-    ```
-    resource "kubernetes_ingress_v1" "sample_application_ingress" {
-    metadata {
-        name = "sample-application-ingress"
-        namespace = kubernetes_namespace.sample-application-namespace.metadata[0].name
-        annotations = {
-        "alb.ingress.kubernetes.io/scheme" = "internet-facing"
-    }
-    }
-
-    spec {
-        ingress_class_name = "alb"
-        default_backend {
-        service {
-            name = "sample-application-svc"
-            port {
-            number = 80
-            }
-        }
-        }
-
-        rule {
-        http {
-            path {
-            backend {
-                service {
-                name = "sample-application-svc"
-                port {
-                    number = 80
-                }
-                }
-            }
-
-            path = "/app1/*"
-            }
-
-        }
-        }
-
-        tls {
-        secret_name = "tls-secret"
-        }
-    }
-    }
-    ```
-
-When the above is done, use the following commands to confirm if the ingress was created succesfully.
-
-    kubectl get ingress
-
-Access the application on the browser using the application load balancer address shown from by the above command. 
-
-
 ## Cleanup the Resources we Created
 
 When we are done testing the setup and don't require the resources created anymore, we can use the steps below to remove them. 
@@ -427,10 +280,14 @@ An EKS Cluster can be created using a variety of methods; nevertheless, using th
 
 The above method is just one of the method that can be used to create the EKS clusters. 
 
+## Next Steps
+
+The following project deploys a sample nginx application and create a load balancer that can be used to access the application. 
+
+[Deploy sample application and create a Load Balancer Using Terraform to EKS Cluster](https://github.com/Skanyi/terraform-projects/tree/main/applications/sample-application-nginx)
+
 Throughout the following setup, I referenced heavily from the following sources. 
 
 [1] AWS VPC Terraform module - https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/latest<br>
 [2] AWS EKS Terraform module - https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/latest<br>
 [3] IAM Role for Service Accounts in EKS - https://github.com/terraform-aws-modules/terraform-aws-iam/tree/master/examples/iam-role-for-service-accounts-eks<br>
-[4] Resource: helm_release - https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release
-

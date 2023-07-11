@@ -1,4 +1,4 @@
-## Deploy sample application Using Terraform to EKS Cluster. 
+## Deploy sample application and Create a Load Balancer Using Terraform to EKS Cluster. 
 
 ### Prerequisite
 
@@ -22,6 +22,8 @@ The following details makes the following assumptions.
 
     You have created s3 bucket that will act as the backend of the project. 
 
+You have setup the EKS cluster as describedin this project [Setting up EKS Cluster with Terraform, Helm and a Load balancer](https://github.com/Skanyi/terraform-projects/tree/main/eks)
+
 ## Quick Setup
 
 Clone the repository:
@@ -30,7 +32,7 @@ Clone the repository:
 
 Change directory;
 
-    cd terraform-projects/applications
+    cd applications/sample-application-nginx
 
 Update the `backend.tf` and update the s3 bucket and the region of your s3 bucket. Update the profile if you are not using the default profile. 
 
