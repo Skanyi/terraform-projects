@@ -294,4 +294,6 @@ Access the application on the browser using the application load balancer addres
 
 ![Kubernetes Ingress Loadbalancer](assets/Kubernetes-Ingress-Loadbalancer.png "Deploy sample application")
 
-[1] Resource: helm_release - https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release
+## Next Steps
+
+I will be adding monitoring using Prometheus and Grafana 
