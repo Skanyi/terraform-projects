@@ -22,7 +22,7 @@ The following details makes the following assumptions.
 
     You have created s3 bucket that will act as the backend of the project. 
 
-You have setup the EKS cluster as describedin this project [Setting up EKS Cluster with Terraform, Helm and a Load balancer](https://github.com/Skanyi/terraform-projects/tree/main/eks)
+You have setup the EKS cluster as described in this project [Setting up EKS Cluster with Terraform, Helm and a Load balancer](https://github.com/Skanyi/terraform-projects/tree/main/eks)
 
 ## Quick Setup
 
@@ -145,7 +145,7 @@ When the above setup is done, we are now ready to deploy a sample application to
         }
     }
     }
-
+    ```
 
 5. Deployment - We create a simple deplyment using resource "kubernetes_deployment_v1" and nginx as the image for our container. 
 
@@ -293,6 +293,14 @@ When the above is done, use the following commands to confirm if the ingress was
 Access the application on the browser using the application load balancer address shown from by the above command. 
 
 ![Kubernetes Ingress Loadbalancer](assets/Kubernetes-Ingress-Loadbalancer.png "Deploy sample application")
+
+## Cleanup the Resources we Created
+
+When we are done testing the setup and don’t require the resources created anymore, we can use the steps below to remove them.
+
+    1.1 terraform init
+
+    1.2 terraform destroy
 
 ## Next Steps
 
