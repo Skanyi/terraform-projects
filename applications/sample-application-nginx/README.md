@@ -1,4 +1,4 @@
-## Deploy sample application Using Terraform to EKS Cluster. 
+## Deploy sample application and Create a Load Balancer Using Terraform to EKS Cluster. 
 
 ### Prerequisite
 
@@ -22,6 +22,8 @@ The following details makes the following assumptions.
 
     You have created s3 bucket that will act as the backend of the project. 
 
+You have setup the EKS cluster as described in this project [Setting up EKS Cluster with Terraform, Helm and a Load balancer](https://github.com/Skanyi/terraform-projects/tree/main/eks)
+
 ## Quick Setup
 
 Clone the repository:
@@ -30,7 +32,7 @@ Clone the repository:
 
 Change directory;
 
-    cd terraform-projects/applications
+    cd applications/sample-application-nginx
 
 Update the `backend.tf` and update the s3 bucket and the region of your s3 bucket. Update the profile if you are not using the default profile. 
 
@@ -143,7 +145,7 @@ When the above setup is done, we are now ready to deploy a sample application to
         }
     }
     }
-
+    ```
 
 5. Deployment - We create a simple deplyment using resource "kubernetes_deployment_v1" and nginx as the image for our container. 
 
@@ -292,4 +294,14 @@ Access the application on the browser using the application load balancer addres
 
 ![Kubernetes Ingress Loadbalancer](assets/Kubernetes-Ingress-Loadbalancer.png "Deploy sample application")
 
-[1] Resource: helm_release - https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release
+## Cleanup the Resources we Created
+
+When we are done testing the setup and don’t require the resources created anymore, we can use the steps below to remove them.
+
+    1.1 terraform init
+
+    1.2 terraform destroy
+
+## Next Steps
+
+I will be adding monitoring using Prometheus and Grafana 

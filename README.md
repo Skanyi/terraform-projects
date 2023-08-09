@@ -2,7 +2,10 @@
 
 The following Github repository stores all my Terraform projects. 
 
-Project [Setting up EKS with Terraform, Helm and a Load balancer](https://github.com/Skanyi/terraform-projects/tree/main/eks)
+Projects:
+1. [Setting up EKS Cluster with Terraform, Helm and a Load balancer](https://github.com/Skanyi/terraform-projects/tree/main/eks)
+
+2. [Deploy sample application Using Terraform to EKS Cluster Created in project 1](https://github.com/Skanyi/terraform-projects/tree/main/applications/sample-application-nginx)
 
 
 ### Add monitoring to the EKS Cluster
