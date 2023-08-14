@@ -39,18 +39,3 @@ module "aws_alb_controller" {
   oidc_provider_arn = module.eks.oidc_provider_arn
 }
 
-################################################################################
-# Sample Application Using Nginx Image
-################################################################################
-
-module "sample-nginx-application" {
-  source = "./modules/sample-nginx-application"
-
-  main-region  = var.main-region
-  env_name     = var.env_name
-  cluster_name = var.cluster_name
-
-  vpc_id            = module.vpc.vpc_id
-  oidc_provider_arn = module.eks.oidc_provider_arn
-}
-

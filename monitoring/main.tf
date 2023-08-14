@@ -10,6 +10,7 @@ module "managed_grafana" {
   env_name    = var.env_name
 
   private_subnets = var.private_subnets
+  sso_admin_group_id = var.sso_admin_group_id
 }
 
 
