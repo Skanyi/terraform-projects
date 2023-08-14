@@ -4,21 +4,21 @@
 
 Before we proceed and provision EKS Cluster using Terraform, there are a few commands or tools you need to have in the server where you will be creating the cluster from.
 
-    1. awscli - aws-cli/2.12.1 Python/3.11.3
+    1. awscli
+   
+    2. go
 
-    2. go version go1.18.9 linux/amd64
+    3. Terraform
 
-    3. Terraform v1.5.0
+    4. kubectl
 
-    4. kubectl - Client Version: v1.23.17-eks
-
-    5. helm - v3.8.0
+    5. helm
 
 ### Assumptions
 
 The following details makes the following assumptions.
 
-    You have aws cli configured
+    You have aws cli configured  - aws configure
 
     You have created s3 bucket that will act as the backend of the project. 
 
@@ -34,9 +34,9 @@ Change directory;
 
 Update the `backend.tf` and update the s3 bucket and the region of your s3 bucket. Update the profile if you are not using the default profile. 
 
-Update the `variables.tf` profile variable if you are not using the default profile. 
+Update the `variables.tf` profile and region variables if you are not using the default profile or region used. 
 
-If the is a role you want to add to be able to access the EKS cluster created, create the following environment variable. 
+If there is a role you want to add to be able to access the EKS cluster created, create the following environment variable in your working server. 
 
     TF_VAR_rolearn
 
