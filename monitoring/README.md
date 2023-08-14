@@ -1,5 +1,3 @@
-# DRAFT. Not tested yet 
-
 ## Deploy AWS Managed Prometheus (AMP) and AWS Managed Grafana (AMG) With Terraform for scalable observibility on EKS Cluster. 
 
 ### Prerequisite
