@@ -55,7 +55,7 @@ module "managed_grafana" {
   # Role associations
   role_associations = {
     "ADMIN" = {
-      "group_ids" = ["72a55424-40d1-701f-6bdf-2c4227265d17"]
+      "group_ids" = [var.sso_admin_group_id]
     }
   }
 

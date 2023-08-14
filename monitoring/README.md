@@ -6,15 +6,15 @@
 
 Before we proceed deploy AMP and AMG using Terraform, there are a few commands or tools you need to have in the server where you will be executing the terraform scripts on.
 
-    1. awscli - aws-cli/2.12.1 Python/3.11.3
+    1. awscli
+   
+    2. go
 
-    2. go version go1.18.9 linux/amd64
+    3. Terraform
 
-    3. Terraform v1.5.0
+    4. kubectl
 
-    4. kubectl - Client Version: v1.23.17-eks
-
-    5. helm - v3.8.0
+    5. helm
 
 ### Assumptions
 
@@ -26,7 +26,7 @@ The following details makes the following assumptions.
 
 ## Quick Setup
 
-Clone the repository:
+Clone the repository if you have not cloned it already:
 
     git clone https://github.com/Skanyi/terraform-projects.git
 
@@ -38,7 +38,7 @@ Update the `backend.tf` and update the s3 bucket and the region of your s3 bucke
 
 Update the `variables.tf` profile variable if you are not using the default profile. 
 
-Update the `secret.tfvars` file with the output values of the [Setting up EKS with Terraform, Helm and a Load balance]()
+Update the `secret.tfvars` file with the output values of the [Setting up EKS Cluster with Terraform, Helm and a Load balancer](https://github.com/Skanyi/terraform-projects/tree/main/eks) module. 
 
 Format the the project
 
@@ -54,11 +54,11 @@ Validate that the project is correctly setup.
 
 Run the plan command to see all the resources that will be created
 
-    terraform plan --var-file="secret.tfvars
+    terraform plan --var-file="secret.tfvars"
 
 When you ready, run the apply command to create the resources. 
 
-    terraform apply --var-file="secret.tfvars
+    terraform apply --var-file="secret.tfvars"
 
 
 ## Detailed Setup Steps. 
@@ -67,17 +67,15 @@ When the above setup is done, we are now ready to deploy AMP and AMG in our prev
 
 ### Deploy AWS Managed Service for Grafana (AMG)
 
-Before creating the AMG, we need to created 
+Before creating the AMG, we need to ensure the the AWS-SSO is enabled to be able to access the Grafana workspace. 
 
-Ensure AWS-SSO is enabled
+The following documentaion details how to ues [AWS IAM Identity Center (successor to AWS Single Sign-On)](https://docs.aws.amazon.com/grafana/latest/userguide/getting-started-with-AMG.html)  with your Amazon Managed Grafana workspace. 
 
-Getting started with Amazon Managed Grafana [https://docs.aws.amazon.com/grafana/latest/userguide/getting-started-with-AMG.html]
+When you have AWS Single Sign-On setup, contiue with the next steps. 
 
-AWS IAM Identity Center (successor to AWS Single Sign-On)
+1. Create the AMG using the [AWS Managed Service for Grafana (AMG) Terraform module](https://registry.terraform.io/modules/terraform-aws-modules/managed-service-grafana/aws/latest)
 
-The authentication providers for the workspace. Valid values are AWS_SSO, SAML, or both
-
-1. Create the AMG using the [AWS Managed Service for Grafana (AMG) Terraform module] https://registry.terraform.io/modules/terraform-aws-modules/managed-service-grafana/aws/latest
+Note the variable "[var.sso_admin_group_id]". Make sure you have updated the `secret.tfvars` with a valid value from AWS SSO Group. 
 
     ```
     module "managed_grafana" {
@@ -151,21 +149,23 @@ The authentication providers for the workspace. Valid values are AWS_SSO, SAML, 
 
 ### Deploy AWS Managed Service for Prometheus (AMP) 
 
-Install the EBS CSI controller Addon
+Prometheus requires Amazon EBC CSI driver to be installed in your cluster. This driver allows your cluster to manage the lifecycle of Amazon EBS volumes for persistent volumes. Update the [Setting up EKS Cluster with Terraform, Helm and a Load balancer](https://github.com/Skanyi/terraform-projects/tree/main/eks) and add the Amazon EBS volume addon. Also add AmazonEBSCSIDriverPolicy to the NodeGroups.  
 
-EBS CSI driver entirely from Terraform on AWS EKS
- 
-eks_managed_node_group_defaults = { 
-    # Needed by the aws-ebs-csi-driver 
-    iam_role_additional_policies = { 
-        AmazonEBSCSIDriverPolicy = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy" 
-    } 
-}
+    ```
+    cluster_addons = {
+    aws-ebs-csi-driver = {
+        most_recent = true
+        }
+    }
+    ```
 
-aws-ebs-csi-driver = {
-    most_recent = true
-}
-
+    ```
+    eks_managed_node_group_defaults = {
+        iam_role_additional_policies = {
+        AmazonEBSCSIDriverPolicy = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+        }
+    }
+    ```
 
 1.  Create the AWS Managed Service for Prometheus (AMP) Terraform module https://registry.terraform.io/modules/terraform-aws-modules/managed-service-prometheus/aws/latest
 
@@ -310,7 +310,7 @@ When the above is done, use the following commands to confirm if the prometheus 
 
 ### Deploy VPC endpoints
 
-1. Security Group - Create a security group that will be attached to the VPC Endpoints. 
+1. Security Group - Create a security group that will be attached to the VPC Endpoints. Allow traffic from the Grafana Security group. 
 
     ```
     resource "aws_security_group" "allow_tls_grafana" {
@@ -361,14 +361,30 @@ When the above is done, use the following commands to confirm if the prometheus 
 
 ### Access the Grafana workspace and create 
 
-Add prometheus as datasource
-
-Create a sample dashboard
+Add prometheus as datasource in in Grafana Workspace withou the `/api/v1/query` on the url. Select AWS SDK as authentication provider and update the region. 
 
 
-Should look like something below. 
-
-![Kubernetes EKS Cluster (Prometheus)](assets/Kubernetes-Ingress-Loadbalancer.png " Deploy AWS Managed Prometheus (AMP) and AWS Managed Grafana (AMG) With Terraform for scalable observibility on EKS Cluster")
+![Add Prometheus datasource to AMG ](assets/Kubernetes-Prometheus-datasource.png " Deploy AWS Managed Prometheus (AMP) and AWS Managed Grafana (AMG) With Terraform for scalable observibility on EKS Cluster")
 
 
+When the above is done, click on save and test and you should see `Data source is working` message. 
+
+
+![Prometheus datasource is working ](assets/Kubernetes-Prometheus-datasource-working.png " Deploy AWS Managed Prometheus (AMP) and AWS Managed Grafana (AMG) With Terraform for scalable observibility on EKS Cluster")
+
+
+
+Create a sample dashboard by importing a sample dashboard from grafana. Search a dashboard `3119` and import it
+
+
+![Import Dashboard ](assets/Kubernetes-Grafana-dashboard.png " Deploy AWS Managed Prometheus (AMP) and AWS Managed Grafana (AMG) With Terraform for scalable observibility on EKS Cluster")
+
+
+When the dashboard is imported, give it a moment and it should populate and look like this. 
+
+
+![Kubernetes EKS Cluster (Prometheus)](assets/Kubernetes-Grafana-Sample-Dashboard.png " Deploy AWS Managed Prometheus (AMP) and AWS Managed Grafana (AMG) With Terraform for scalable observibility on EKS Cluster")
+
+
+At this moment you have both AMP and AMG configured. Grafana dashboards can be created to monitor the metrics important to you in your EKS cluster. 
 
