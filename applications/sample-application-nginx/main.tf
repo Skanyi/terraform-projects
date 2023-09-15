@@ -111,8 +111,8 @@ resource "kubernetes_deployment_v1" "sample_application_deployment" {
       spec {
         service_account_name = kubernetes_service_account.service-account.metadata[0].name
         container {
-          image = "nginx:1.21.6"
-          name  = "nginx"
+          image = "httpd:latest"
+          name  = "apache"
 
           resources {
             limits = {
