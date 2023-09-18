@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: sample-application-argocd
+  name: sample-application-deployment
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: app
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: app
+    spec:
+      containers:
+      - image: nginx:alpine
+        imagePullPolicy: Always
+        name: app
+        ports:
+        - containerPort: 80
+        
