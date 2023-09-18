@@ -4,15 +4,15 @@
 
 Before we proceed and deploy the sample application using Terraform, there are a few commands or tools you need to have in the server where you will be creating the cluster from.
 
-    1. awscli - aws-cli/2.12.1 Python/3.11.3
+    1. awscli
 
-    2. go version go1.18.9 linux/amd64
+    2. go
 
-    3. Terraform v1.5.0
+    3. Terraform
 
-    4. kubectl - Client Version: v1.23.17-eks
+    4. kubectl
 
-    5. helm - v3.8.0
+    5. helm
 
 ### Assumptions
 

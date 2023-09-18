@@ -5,7 +5,7 @@
 
 variable "profile" {
   type    = string
-  default = "kanyi-po"
+  default = "default"
 }
 
 variable "main-region" {

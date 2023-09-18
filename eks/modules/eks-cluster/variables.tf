@@ -3,11 +3,11 @@
 ################################################################################
 
 variable "profile" {
-  type    = string
+  type = string
 }
 
 variable "main-region" {
-  type    = string
+  type = string
 }
 
 ################################################################################
@@ -16,12 +16,12 @@ variable "main-region" {
 
 variable "vpc_id" {
   description = "VPC ID which EKS cluster is deployed in"
-  type = string
+  type        = string
 }
 
 variable "private_subnets" {
   description = "VPC Private Subnets which EKS cluster is deployed in"
-  type = list
+  type        = list(any)
 }
 
 ################################################################################
@@ -29,6 +29,6 @@ variable "private_subnets" {
 ################################################################################
 
 variable "rolearn" {
-	description = "Add admin role to the aws-auth configmap"
+  description = "Add admin role to the aws-auth configmap"
 }
 

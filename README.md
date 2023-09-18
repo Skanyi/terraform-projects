@@ -7,9 +7,11 @@ Projects:
 
 2. [Deploy sample application Using Terraform to EKS Cluster Created in project 1](https://github.com/Skanyi/terraform-projects/tree/main/applications/sample-application-nginx)
 
+3. [Deploy AWS Managed Prometheus (AMP) and AWS Managed Grafana (AMG) With Terraform for scalable observibility on EKS Cluster Created in Project 1](https://github.com/Skanyi/terraform-projects/tree/main/monitoring) 
+
 
 ### Add monitoring to the EKS Cluster
 
-1. Monitoring using prometheus and grafana
+1. Deploy Argo CD to EKS cluster for Continous delivery of the applications. 
 
 If there is any tooling or project that you would like to see integrated with EKS cluster, create an issue and if I have time i will add it to the project. 
